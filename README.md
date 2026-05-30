@@ -1,129 +1,193 @@
 # 🚀 Lead Management Backend (FastAPI + MySQL)
 
-A backend system built using FastAPI and MySQL to manage real estate leads with full CRUD functionality.
+A backend application built using FastAPI and MySQL for managing real estate leads. The project supports authentication, authorization, lead ownership, and full CRUD operations through REST APIs.
 
 ---
 
 ## 📌 Features
 
-* ✅ Create Lead (POST /leads)
-* ✅ Get All Leads (GET /leads with filters)
-* ✅ Get Single Lead (GET /leads/{id})
-* ✅ Update Lead (PATCH /leads/{id})
-* ✅ Delete Lead (DELETE /leads/{id})
+### Lead Management
+
+✅ Create Lead
+
+✅ Get All Leads
+
+✅ Get Single Lead
+
+✅ Update Lead
+
+✅ Delete Lead
+
+### Authentication & Authorization
+
+✅ User Signup
+
+✅ User Login
+
+✅ Password Hashing using bcrypt
+
+✅ JWT Authentication
+
+✅ Protected Routes
+
+✅ User-specific Lead Ownership
+
+✅ Authorization (Users can access only their own leads)
+
+### Backend Architecture
+
+✅ Service Layer Architecture
+
+✅ Dependency Injection
+
+✅ Pydantic Request Validation
+
+✅ Environment Variables (.env)
 
 ---
 
 ## 🧠 Tech Stack
 
-* **Backend Framework:** FastAPI
-* **Database:** MySQL
-* **Language:** Python
-* **API Testing:** Swagger UI (/docs)
+**Backend Framework:** FastAPI
+
+**Database:** MySQL
+
+**Language:** Python
+
+**Authentication:** JWT + OAuth2PasswordBearer
+
+**Password Security:** bcrypt (Passlib)
+
+**API Testing:** Swagger UI
+
+**Configuration:** python-dotenv
+
+---
+
+## 📂 Project Structure
+
+```text
+fastapi/
+│
+├── routes/
+│   ├── auth.py
+│   └── leads.py
+│
+├── services/
+│   ├── auth_service.py
+│   └── lead_service.py
+│
+├── schemas.py
+├── db.py
+├── main.py
+├── .env
+└── requirements.txt
+```
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### 1. Clone the repository
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/kratitechie/lead-management-backend.git
 cd lead-management-backend
 ```
 
----
-
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-### 3. Setup MySQL Database
-
-Run the following queries in MySQL:
+### 3. Create MySQL Database
 
 ```sql
 CREATE DATABASE fast_api_project;
-
-USE fast_api_project;
-
-CREATE TABLE leads (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    phone VARCHAR(20),
-    email VARCHAR(100),
-    requirement TEXT,
-    budget VARCHAR(50),
-    location VARCHAR(100),
-    stage VARCHAR(50),
-    loan_required BOOLEAN,
-    status VARCHAR(50) DEFAULT 'new',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 ```
 
----
+### 4. Configure Environment Variables
 
-### 4. Run the server
+Create a `.env` file:
+
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=fast_api_project
+
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+### 5. Run Server
 
 ```bash
 python -m uvicorn main:app --reload
 ```
 
+### 6. Open Swagger Documentation
+
+```text
+http://127.0.0.1:8000/docs
+```
+
 ---
 
-### 5. Open API Docs
+## 🔄 API Endpoints
 
-👉 http://127.0.0.1:8000/docs
+### Authentication
 
----
+| Method | Endpoint | Description |
+| ------ | -------- | ----------- |
+| POST   | /signup  | Create User |
+| POST   | /login   | Login User  |
 
-## 🔄 API Endpoints Overview
+### Leads
 
-| Method | Endpoint    | Description             |
-| ------ | ----------- | ----------------------- |
-| POST   | /leads      | Create a new lead       |
-| GET    | /leads      | Get all leads (filters) |
-| GET    | /leads/{id} | Get single lead by ID   |
-| PATCH  | /leads/{id} | Update lead             |
-| DELETE | /leads/{id} | Delete lead             |
+| Method | Endpoint    | Description     |
+| ------ | ----------- | --------------- |
+| POST   | /lead       | Create Lead     |
+| GET    | /leads      | Get User Leads  |
+| GET    | /leads/{id} | Get Single Lead |
+| PATCH  | /leads/{id} | Update Lead     |
+| DELETE | /leads/{id} | Delete Lead     |
 
 ---
 
 ## 🧠 Key Concepts Implemented
 
-* RESTful API design
-* Request validation using Pydantic
-* Dynamic SQL queries (filters & updates)
-* MySQL integration with Python
-* Error handling
-
----
-
-## ⚠️ Note
-
-* Database credentials are currently hardcoded (for learning purposes).
-* In production, use environment variables (.env).
+* REST API Design
+* FastAPI Dependency Injection
+* Service Layer Architecture
+* JWT Authentication
+* Authorization & Ownership
+* Password Hashing (bcrypt)
+* Environment Variables
+* Dynamic SQL Query Building
+* MySQL Integration
+* Pydantic Validation
+* Error Handling
 
 ---
 
 ## 🚀 Future Improvements
 
-* Authentication (JWT-based login/signup)
-* Project structure refactor (routes, db separation)
-* Deployment (Render / Railway)
-* Pagination & advanced filtering
+* Deployment (Render/Railway)
+* Pagination
+* Sorting & Search
+* Refresh Tokens
+* Docker Support
+* Role-Based Access Control (RBAC)
 
 ---
 
 ## 👩‍💻 Author
 
-**Krati Bhatia**
+Krati Bhatia
 
 ---
 
-## ⭐ If you found this useful, consider giving it a star!
+⭐ If you found this useful, consider giving it a star!
