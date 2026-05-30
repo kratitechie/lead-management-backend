@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends
+from services.auth_service import get_current_user
+
 # APIRouter → creates modular route groups
 # Depends → used for Dependency Injection (DI)
 
@@ -25,9 +27,9 @@ router = APIRouter()
 
 def create_lead(
     lead: LeadCreate,
+    db_tuple = Depends(get_db),
+    current_user = Depends(get_current_user)
     # Request Body Validation using Pydantic schema
-
-    db_tuple = Depends(get_db)
     # Dependency Injection
     # FastAPI injects conn + cursor
 ):
@@ -39,7 +41,8 @@ def create_lead(
         return create_lead_services(
             conn,
             cursor,
-            lead
+            lead,
+            current_user
         )
     
 
@@ -67,18 +70,20 @@ def get_leads(
     # Example:
     # /leads?location=Indore
 
-    db_tuple = Depends(get_db)
+    db_tuple = Depends(get_db),
     # Dependency Injection
+    current_user = Depends(get_current_user),
 
 ):
 
     conn, cursor = db_tuple
     # Unpacking conn + cursor
-
+    print (current_user)
     try:
 
         return fetch_leads(
             cursor,
+            current_user["user_id"],
             location,
             budget,
             stage

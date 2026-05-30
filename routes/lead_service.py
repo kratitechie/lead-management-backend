@@ -1,9 +1,9 @@
-def create_lead_services(conn, cursor, lead):
+def create_lead_services(conn, cursor, lead, current_user):
 
     query = """
     INSERT INTO leads
-    (name, phone, email, requirement, budget, location, stage, loan_required)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    (name, phone, email, requirement, budget, location, stage, loan_required, user_id)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
 
     values = (
@@ -14,7 +14,8 @@ def create_lead_services(conn, cursor, lead):
         lead.budget,
         lead.location,
         lead.stage,
-        lead.loan_required
+        lead.loan_required,
+        current_user["user_id"]
     )
 
     cursor.execute(query, values)
@@ -25,6 +26,7 @@ def create_lead_services(conn, cursor, lead):
 
 def fetch_leads(
     cursor,
+    user_id,
     location=None,
     budget=None,
     stage=None
@@ -34,7 +36,11 @@ def fetch_leads(
     # Contains business/query logic
     # Independent of FastAPI routes
 
-    query = "SELECT * FROM leads WHERE 1=1"
+    query = """
+SELECT *
+FROM leads
+WHERE user_id = %s
+"""
 
     # Base SQL Query
     
@@ -43,7 +49,7 @@ def fetch_leads(
     # Makes appending conditions easier:
     # AND location = ...
     # AND budget = ...
-    values = []
+    values = [user_id]
 
     # Stores dynamic query values
     # Used for parameterized SQL queries
@@ -77,7 +83,8 @@ def fetch_leads(
 
         values.append(stage)
 
-
+    print(query)
+    print(values)
     cursor.execute(query, tuple(values))
 
     # SQL Execution

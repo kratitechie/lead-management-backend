@@ -1,17 +1,39 @@
+
 from passlib.context import CryptContext
 from schemas import UserCreate, UserLogin
-from jose import jwt
+from jose import jwt, JWTError
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import os
+
+load_dotenv(dotenv_path=".env")
 
 pwd_context = CryptContext(
     schemes = ["bcrypt"],
     deprecated = "auto"
 )
-SECRET_KEY = "mysecretkey"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "mysecretkey"
+)
 
-ALGORITHM = "HS256"
+ALGORITHM = os.getenv(
+    "ALGORITHM",
+    "HS256"
+)
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = int(
+    os.getenv(
+        "ACCESS_TOKEN_EXPIRE_MINUTES",
+        "30"
+    )
+)
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/login"
+)
 
 def hash_password (password: str):
     return pwd_context.hash(password)
@@ -71,7 +93,6 @@ def authenticate_user(
     conn,
     cursor
 ):
-
     query = """
     SELECT * FROM users
     WHERE email = %s
@@ -111,4 +132,41 @@ def authenticate_user(
         "access_token": access_token,
         "token_type": "bearer"
     }
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme)
+
+):
+    print("TOKEN RECEIVED:", token)
+    credentials_exception = HTTPException(
+    status_code=401,
+    detail="Could not validate credentials"
+    )
+
+    try:
+
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        user_id = payload.get("user_id")
+
+        email = payload.get("email")
+
+        if user_id is None or email is None:
+
+            raise credentials_exception
+
+        return {
+            "user_id": user_id,
+            "email": email
+        }
+
+    except JWTError:
+
+        raise credentials_exception
+    
+    
     

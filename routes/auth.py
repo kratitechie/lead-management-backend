@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-
+from fastapi.security import OAuth2PasswordRequestForm
 from schemas import UserCreate, UserLogin
 from db import get_db
 
@@ -27,15 +27,23 @@ def signup(
     
 @router.post("/login")
 def login(
-    user: UserLogin,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db=Depends(get_db)
 ):
 
+    print("LOGIN HIT")
+    print(form_data.username)
+    print(form_data.password)
+
     conn, cursor = db
 
+    user_data = UserLogin(
+        email=form_data.username,
+        password=form_data.password
+    )
+
     return authenticate_user(
-        user,
+        user_data,
         conn,
         cursor
     )
-    
