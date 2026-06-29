@@ -1,30 +1,20 @@
 # 🚀 Lead Management Backend (FastAPI + MySQL)
 
-A backend application built using FastAPI and MySQL for managing real estate leads. The project supports authentication, authorization, lead ownership, and full CRUD operations through REST APIs.
+A production-style **Lead Management REST API** built using **FastAPI**, **MySQL**, **JWT Authentication**, **Docker**, and **AWS EC2**.
+
+The project demonstrates modern backend development practices including authentication, authorization, dependency injection, service-layer architecture, Docker containerization, and cloud deployment.
 
 ---
 
-## 📌 Features
+# ✨ Features
 
-### Lead Management
-
-✅ Create Lead
-
-✅ Get All Leads
-
-✅ Get Single Lead
-
-✅ Update Lead
-
-✅ Delete Lead
-
-### Authentication & Authorization
+### 🔐 Authentication & Authorization
 
 ✅ User Signup
 
 ✅ User Login
 
-✅ Password Hashing using bcrypt
+✅ Password Hashing (bcrypt)
 
 ✅ JWT Authentication
 
@@ -34,41 +24,122 @@ A backend application built using FastAPI and MySQL for managing real estate lea
 
 ✅ Authorization (Users can access only their own leads)
 
-### Backend Architecture
+---
+
+### 📋 Lead Management
+
+✅ Create Lead
+
+✅ Get All Leads
+
+✅ Get Lead by ID
+
+✅ Update Lead
+
+✅ Delete Lead
+
+✅ Dynamic Lead Filtering
+
+---
+
+### 🏗 Backend Architecture
 
 ✅ Service Layer Architecture
 
 ✅ Dependency Injection
 
-✅ Pydantic Request Validation
+✅ Pydantic Validation
 
-✅ Environment Variables (.env)
+✅ Environment Variables
 
----
+✅ Dockerized Application
 
-## 🧠 Tech Stack
-
-**Backend Framework:** FastAPI
-
-**Database:** MySQL
-
-**Language:** Python
-
-**Authentication:** JWT + OAuth2PasswordBearer
-
-**Password Security:** bcrypt (Passlib)
-
-**API Testing:** Swagger UI
-
-**Configuration:** python-dotenv
+✅ AWS EC2 Deployment
 
 ---
 
-## 📂 Project Structure
+# 🛠 Tech Stack
+
+| Technology | Purpose |
+|------------|----------|
+| Python | Backend Language |
+| FastAPI | REST API Framework |
+| MySQL | Database |
+| Docker | Containerization |
+| Docker Compose | Multi-container Management |
+| JWT | Authentication |
+| OAuth2 | Authorization |
+| Passlib (bcrypt) | Password Hashing |
+| Pydantic | Request Validation |
+| Swagger UI | API Documentation |
+| AWS EC2 | Cloud Deployment |
+| Git & GitHub | Version Control |
+
+---
+
+# 🏛 Project Architecture
+
+```mermaid
+graph TD
+
+A[Client / Swagger UI]
+
+--> B[FastAPI Routes]
+
+--> C[Dependency Injection]
+
+--> D[Service Layer]
+
+--> E[MySQL Database]
+```
+
+---
+
+# 🔑 Authentication Flow
+
+```mermaid
+graph TD
+
+A[Signup]
+
+--> B[Hash Password]
+
+--> C[Store User]
+
+D[Login]
+
+--> E[Generate JWT]
+
+--> F[JWT Token Returned]
+
+--> G[Authorize]
+
+--> H[Protected APIs]
+
+--> I[Verify JWT]
+
+--> J[Access Database]
+```
+
+---
+
+# 🐳 Docker Architecture
+
+```mermaid
+graph LR
+
+A[FastAPI Container]
+
+<--> B[MySQL Container]
+```
+
+---
+
+# 📂 Project Structure
 
 ```text
-fastapi/
-│
+lead-management-backend/
+
 ├── routes/
 │   ├── auth.py
 │   └── leads.py
@@ -80,114 +151,166 @@ fastapi/
 ├── schemas.py
 ├── db.py
 ├── main.py
-├── .env
-└── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── .env.example
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+# 🚀 Running the Project
 
-### 1. Clone Repository
+## 1️⃣ Clone Repository
 
 ```bash
 git clone https://github.com/kratitechie/lead-management-backend.git
+
 cd lead-management-backend
 ```
 
-### 2. Install Dependencies
+---
 
-```bash
-pip install -r requirements.txt
-```
+## 2️⃣ Create Environment Variables
 
-### 3. Create MySQL Database
-
-```sql
-CREATE DATABASE fast_api_project;
-```
-
-### 4. Configure Environment Variables
-
-Create a `.env` file:
+Create a `.env` file inside the project root.
 
 ```env
-DB_HOST=localhost
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=fast_api_project
 DB_USER=root
 DB_PASSWORD=your_password
-DB_NAME=fast_api_project
 
 SECRET_KEY=your_secret_key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-### 5. Run Server
+---
+
+## 3️⃣ Build & Start Containers
 
 ```bash
-python -m uvicorn main:app --reload
-```
-
-### 6. Open Swagger Documentation
-
-```text
-http://127.0.0.1:8000/docs
+docker compose up --build
 ```
 
 ---
 
-## 🔄 API Endpoints
+## 4️⃣ Open Swagger Documentation
 
-### Authentication
+```
+http://localhost:8000/docs
+```
+
+---
+
+# 📡 API Endpoints
+
+## Authentication
 
 | Method | Endpoint | Description |
-| ------ | -------- | ----------- |
-| POST   | /signup  | Create User |
-| POST   | /login   | Login User  |
-
-### Leads
-
-| Method | Endpoint    | Description     |
-| ------ | ----------- | --------------- |
-| POST   | /lead       | Create Lead     |
-| GET    | /leads      | Get User Leads  |
-| GET    | /leads/{id} | Get Single Lead |
-| PATCH  | /leads/{id} | Update Lead     |
-| DELETE | /leads/{id} | Delete Lead     |
+|---------|----------|-------------|
+| POST | /signup | Register User |
+| POST | /login | Login User |
 
 ---
 
-## 🧠 Key Concepts Implemented
+## Leads
 
-* REST API Design
-* FastAPI Dependency Injection
-* Service Layer Architecture
-* JWT Authentication
-* Authorization & Ownership
-* Password Hashing (bcrypt)
-* Environment Variables
-* Dynamic SQL Query Building
-* MySQL Integration
-* Pydantic Validation
-* Error Handling
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /lead | Create Lead |
+| GET | /leads | Get All User Leads |
+| GET | /leads/{id} | Get Lead by ID |
+| PATCH | /leads/{id} | Update Lead |
+| DELETE | /leads/{id} | Delete Lead |
 
 ---
 
-## 🚀 Future Improvements
+# 📸 API Screenshots
 
-* Deployment (Render/Railway)
-* Pagination
-* Sorting & Search
-* Refresh Tokens
-* Docker Support
-* Role-Based Access Control (RBAC)
+### Swagger Home
+
+> *(Screenshot coming soon)*
 
 ---
 
-## 👩‍💻 Author
+### User Login
 
-Krati Bhatia
+> *(Screenshot coming soon)*
 
 ---
 
-⭐ If you found this useful, consider giving it a star!
+### Create Lead
+
+> *(Screenshot coming soon)*
+
+---
+
+### Get Leads
+
+> *(Screenshot coming soon)*
+
+---
+
+# 💡 Skills Demonstrated
+
+- REST API Design
+- CRUD Operations
+- JWT Authentication
+- OAuth2
+- Password Hashing
+- Service Layer Architecture
+- Dependency Injection
+- Docker
+- Docker Compose
+- AWS EC2 Deployment
+- MySQL Integration
+- Dynamic SQL Queries
+- Environment Variable Management
+- API Documentation
+- Git Workflow
+
+---
+
+# 🚀 Future Improvements
+
+- Duplicate Phone Number Detection
+- Multiple Contact Numbers per Lead
+- Pagination
+- Search & Sorting
+- Role-Based Access Control (RBAC)
+- Refresh Tokens
+- Audit Logs
+- Unit Testing
+- CI/CD using GitHub Actions
+- React Frontend Dashboard
+- Follow-up Reminder System
+
+---
+
+# 📚 What I Learned
+
+Through this project I gained practical experience with:
+
+- Building RESTful APIs using FastAPI
+- Designing scalable Service Layer Architecture
+- JWT Authentication & Authorization
+- MySQL Database Integration
+- Docker & Docker Compose
+- Deploying applications on AWS EC2
+- Managing configuration using Environment Variables
+- Writing clean, modular backend code
+- Documenting APIs using Swagger UI
+
+---
+
+# 👩‍💻 Author
+
+**Krati Bhatia**
+
+Backend Developer | Python | FastAPI | AWS | Docker
+
+⭐ If you found this project helpful, consider giving it a star.
