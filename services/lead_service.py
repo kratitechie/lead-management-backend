@@ -24,6 +24,7 @@ def create_lead_services(conn, cursor, lead, current_user):
 
     return {"message":"Lead stored successfully"}
 
+
 def fetch_leads(
     cursor,
     user_id,
@@ -43,9 +44,9 @@ WHERE user_id = %s
 """
 
     # Base SQL Query
-    
+
     # 1=1 is used for dynamic query building
-    
+
     # Makes appending conditions easier:
     # AND location = ...
     # AND budget = ...
@@ -53,7 +54,6 @@ WHERE user_id = %s
 
     # Stores dynamic query values
     # Used for parameterized SQL queries
-
 
     if location:
 
@@ -69,13 +69,11 @@ WHERE user_id = %s
         # Adds filter value safely
         # Prevents SQL Injection
 
-
     if budget:
 
         query += " AND budget = %s"
 
         values.append(budget)
-
 
     if stage:
 
@@ -83,34 +81,45 @@ WHERE user_id = %s
 
         values.append(stage)
 
-    print(query)
-    print(values)
+    # print(query)
+    # print(values)
+
     cursor.execute(query, tuple(values))
 
     # SQL Execution
-    
+
     # tuple(values):
     # Converts list into SQL-compatible tuple
-    
-    # Executes parameterized query safely
 
+    # Executes parameterized query safely
 
     return cursor.fetchall()
 
     # Fetches all matching rows
-    
+
     # Returns list of dictionaries
     # because dictionary=True was used in cursor
-    
+
+
 def get_id(
     conn,
-    cursor, 
-    id
+    cursor,
+    id,
+    user_id
 ):
-    query = "SELECT * FROM leads WHERE id=%s"
+
+    query = """
+    SELECT *
+    FROM leads
+    WHERE id = %s
+    AND user_id = %s
+    """
         # SQL SELECT query
 
-    cursor.execute(query,(id,))
+    cursor.execute(
+        query,
+        (id, user_id)
+    )
         # Parameterized query execution
 
     lead = cursor.fetchone()
@@ -119,11 +128,16 @@ def get_id(
     if lead:
         return lead
 
-        return {"message":"Lead not found"}
-    
+    return {"message": "Lead not found"}
+
+
 def update_leads(
-    conn, cursor, lead
-    ):
+    conn,
+    cursor,
+    id,
+    lead,
+    user_id
+):
 
     update_fields = []
     values = []
@@ -171,11 +185,13 @@ def update_leads(
     query = f"""
     UPDATE leads
     SET {', '.join(update_fields)}
-    WHERE id=%s
+    WHERE id = %s
+    AND user_id = %s
     """
         # Dynamic UPDATE query
 
     values.append(id)
+    values.append(user_id)
 
     cursor.execute(query, tuple(values))
     # Executes UPDATE query
@@ -183,17 +199,31 @@ def update_leads(
     conn.commit()
         # Saves updated changes
 
-    return {"message":"Lead updated successfully"}
+    if cursor.rowcount > 0:
+
+        return {"message":"Lead updated successfully"}
+
+    return {"message":"Lead not found"}
 
 
 def delete_leads(
-    conn, cursor, lead
+    conn,
+    cursor,
+    id,
+    user_id
 ):
 
-    query = "DELETE FROM leads WHERE id=%s"
+    query = """
+    DELETE FROM leads
+    WHERE id = %s
+    AND user_id = %s
+    """
         # SQL DELETE query
 
-    cursor.execute(query,(id,))
+    cursor.execute(
+        query,
+        (id, user_id)
+    )
         # Executes DELETE operation
 
     conn.commit()

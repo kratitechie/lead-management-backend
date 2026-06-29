@@ -10,13 +10,18 @@ from db import get_db
 from schemas import LeadCreate, LeadUpdate
 # Pydantic schemas for request validation
 
-from routes.lead_service import fetch_leads, create_lead_services, get_id, update_leads, delete_leads
+from services.lead_service import (
+    fetch_leads,
+    create_lead_services,
+    get_id,
+    update_leads,
+    delete_leads
+)
 # Service layer function for fetching leads
 
 
 router = APIRouter()
 # Router object containing all lead-related APIs
-
 
 
 # ---------------- CREATE ----------------
@@ -44,16 +49,11 @@ def create_lead(
             lead,
             current_user
         )
-    
 
     except Exception as e:
         # Error handling
 
         return {"error": str(e)}
-
-
-
-
 
 
 # ---------------- GET ALL ----------------
@@ -78,7 +78,9 @@ def get_leads(
 
     conn, cursor = db_tuple
     # Unpacking conn + cursor
-    print (current_user)
+
+    print(current_user)
+
     try:
 
         return fetch_leads(
@@ -97,10 +99,6 @@ def get_leads(
         return {"error": str(e)}
 
 
-
-
-
-
 # ---------------- GET ONE ----------------
 
 @router.get("/leads/{id}")
@@ -113,21 +111,26 @@ def get_lead(
     id: int,
     # Path parameter validation
 
-    db_tuple = Depends(get_db)
+    db_tuple = Depends(get_db),
+
+    current_user = Depends(get_current_user)
 
 ):
 
     conn, cursor = db_tuple
 
     try:
-        return get_id()
+
+        return get_id(
+            conn,
+            cursor,
+            id,
+            current_user["user_id"]
+        )
+
     except Exception as e:
-        return {"error":str(e)}
 
-
-
-
-
+        return {"error": str(e)}
 
 
 # ---------------- PATCH ----------------
@@ -143,22 +146,27 @@ def update_lead(
     lead: LeadUpdate,
     # Schema with optional fields
 
-    db_tuple = Depends(get_db)
+    db_tuple = Depends(get_db),
+
+    current_user = Depends(get_current_user)
 
 ):
 
     conn, cursor = db_tuple
 
     try:
-        return update_leads
+
+        return update_leads(
+            conn,
+            cursor,
+            id,
+            lead,
+            current_user["user_id"]
+        )
+
     except Exception as e:
 
         return {"error": str(e)}
-
-
-
-
-
 
 
 
@@ -169,17 +177,25 @@ def update_lead(
 
 def delete_lead(
 
-    id:int,
+    id: int,
 
-    db_tuple = Depends(get_db)
+    db_tuple = Depends(get_db),
+
+    current_user = Depends(get_current_user)
 
 ):
 
     conn, cursor = db_tuple
 
     try:
-        return delete_leads
+
+        return delete_leads(
+            conn,
+            cursor,
+            id,
+            current_user["user_id"]
+        )
 
     except Exception as e:
 
-        return {"error":str(e)}
+        return {"error": str(e)}
