@@ -233,25 +233,28 @@ http://localhost:8000/docs
 
 ### Swagger Home
 
-> *(Screenshot coming soon)*
-
+> D:\Coding\Projects\fastapi\Images\Swagger_home.png
 ---
 
 ### User Login
 
-> *(Screenshot coming soon)*
+> D:\Coding\Projects\fastapi\Images\Login.png
 
 ---
 
-### Create Lead
+### Docker Compose
 
-> *(Screenshot coming soon)*
+> D:\Coding\Projects\fastapi\Images\Docker.png
 
 ---
 
-### Get Leads
+### AWS Instance
 
-> *(Screenshot coming soon)*
+> D:\Coding\Projects\fastapi\Images\AWS_instance.png
+
+### AWS Instance
+
+> D:\Coding\Projects\fastapi\Images\JWT authentication.png
 
 ---
 
@@ -274,6 +277,14 @@ http://localhost:8000/docs
 - Git Workflow
 
 ---
+
+## 🚀 Live Demo
+
+**Swagger UI**
+
+http://16.171.150.6:8000/docs
+
+> Note: The EC2 instance may be stopped when not in use to reduce AWS costs.
 
 # 🚀 Future Improvements
 
